@@ -10,18 +10,27 @@ namespace P
     class Game
     {
         public int NumOfPlayers { get; set; }
+        public uint GameStack { get; set; }
         public List<Player> Players = new List<Player>();
         public List<Card> CardsOnTable = new List<Card>();
         public Game(int nop)
         {
             NumOfPlayers = nop;
         }
-        public void InitGame()
+        public void CreatePlayers()
         {
-            Deck DeckA = new Deck();
             for (int i = 0; i < NumOfPlayers; i++)
             {
                 Players.Add(new Player(i));
+            }
+        }
+        public void InitGame()
+        {
+            Deck DeckA = new Deck();
+
+            //Give Cards to players
+            for (int i = 0; i < NumOfPlayers; i++)
+            {
                 Players[i].Hand = DeckA.DealCards();
             }
 
@@ -33,6 +42,9 @@ namespace P
             CardsOnTable.AddRange(turn);
             CardsOnTable.AddRange(river);
 
+            Players[0].ShowInfo();
+            Players[0].Raise(500);
+            Players[0].ShowInfo();
 
 
 

@@ -15,8 +15,9 @@ namespace P
             WriteLine("POKER TIME!!!");
 
             Game newGame = new Game(2);
+            newGame.CreatePlayers();
             newGame.InitGame();
-
+ 
 
             ReadKey();
         }
