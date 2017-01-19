@@ -11,11 +11,14 @@ namespace P
     {
         public int NumOfPlayers { get; set; }
         public uint GameStack { get; set; }
+        public uint CurrentRound { get; set; }
         public List<Player> Players = new List<Player>();
         public List<Card> CardsOnTable = new List<Card>();
+        public Deck DeckA = new Deck();
         public Game(int nop)
         {
             NumOfPlayers = nop;
+            CurrentRound = 0;
         }
         public void CreatePlayers()
         {
@@ -26,14 +29,7 @@ namespace P
         }
         public void InitGame()
         {
-            Deck DeckA = new Deck();
-
-            //Give Cards to players
-            for (int i = 0; i < NumOfPlayers; i++)
-            {
-                Players[i].Hand = DeckA.DealCards();
-            }
-
+            DealCards();
             List<Card> flop = Flop(ref DeckA);
             List<Card> turn = Turn(ref DeckA);
             List<Card> river = River(ref DeckA);
@@ -42,22 +38,26 @@ namespace P
             CardsOnTable.AddRange(turn);
             CardsOnTable.AddRange(river);
 
-            Players[0].ShowInfo();
-            Players[0].Raise(500);
-            Players[0].ShowInfo();
-
-
-
         }
         public void DealCards()
         {
             // Deal cards to players
-
+            //Give Cards to players
+            for (int i = 0; i < NumOfPlayers; i++)
+            {
+                Players[i].Hand = DeckA.DealCards();
+            }
 
         }
-        public void ClearCards()
+        public void ResetDeck()
         {
-            // Remove cards from the table
+            // ResetDECK
+            DeckA.DeckCards.Clear();
+            CardsOnTable.Clear();
+            DeckA.DeckCards = DeckA.PopulateDeck();
+            CurrentRound += 1;
+
+
         }
         private List<Card> Flop(ref Deck deckrest)
         {
@@ -84,6 +84,12 @@ namespace P
         public void CheckWhoseTurnItIs()
         {
 
+        }
+        public void GameInfo()
+        {
+            WriteLine("Current round: " + CurrentRound + "\nNumber of Players: " + NumOfPlayers);
+            foreach (Card i in CardsOnTable)
+                i.ShowCard();
         }
 
 

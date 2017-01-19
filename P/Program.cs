@@ -16,7 +16,13 @@ namespace P
 
             Game newGame = new Game(2);
             newGame.CreatePlayers();
+            WriteLine("Round1");
             newGame.InitGame();
+            newGame.GameInfo();
+            newGame.ResetDeck();
+            WriteLine("Round1");
+            newGame.InitGame();
+            newGame.GameInfo();
  
 
             ReadKey();
