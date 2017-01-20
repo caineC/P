@@ -14,16 +14,15 @@ namespace P
         {
             WriteLine("POKER TIME!!!");
 
-            Game newGame = new Game(2);
+            Game newGame = new Game(3);
             newGame.CreatePlayers();
-            WriteLine("Round1");
-            newGame.InitGame();
             newGame.GameInfo();
-            newGame.ResetDeck();
-            WriteLine("Round1");
             newGame.InitGame();
-            newGame.GameInfo();
- 
+            WriteLine(newGame.GameStack);
+            newGame.GameRound();
+            //newGame.GameRound();
+
+
 
             ReadKey();
         }

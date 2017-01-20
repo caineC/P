@@ -7,18 +7,22 @@ using static System.Console;
 
 namespace P
 {
-    class Game
+    public class Game
     {
+        public int CurrentPlayer { get; set; }
         public int NumOfPlayers { get; set; }
         public uint GameStack { get; set; }
         public uint CurrentRound { get; set; }
         public List<Player> Players = new List<Player>();
         public List<Card> CardsOnTable = new List<Card>();
         public Deck DeckA = new Deck();
+        public Game() { }
         public Game(int nop)
         {
+            CurrentPlayer = 0;
             NumOfPlayers = nop;
             CurrentRound = 0;
+            GameStack = 0;
         }
         public void CreatePlayers()
         {
@@ -37,6 +41,46 @@ namespace P
             CardsOnTable.AddRange(flop);
             CardsOnTable.AddRange(turn);
             CardsOnTable.AddRange(river);
+
+        }
+        public void GameRound()
+        {
+
+            bool flag = false;
+            while (flag != true)
+            {
+                CurrentPlayer = (CurrentRound < NumOfPlayers) ? (int)CurrentRound : 0;
+                int temp = 0;
+                while (temp < NumOfPlayers)
+                {
+                    WriteLine("\nROUND: " + CurrentRound + "\n");
+                    WriteLine("Player " + CurrentPlayer);
+                    WriteLine("What do you do?");
+                    WriteLine("1- Check, 2- Fold, 3- Call,4-Raise");
+                    int decision = Convert.ToInt16(ReadLine());
+                   
+
+                    Players[CurrentPlayer].MyTurn(decision);
+                    Players[CurrentPlayer].ShowInfo();
+                    if (decision == 4)
+                        GameStack += Players[CurrentPlayer].CurrentRaise;
+                    CurrentPlayer++;
+                    CurrentPlayer = (CurrentPlayer < NumOfPlayers) ? CurrentPlayer : 0;
+                   
+                    temp++;
+                }
+
+                Showdown();
+                foreach (Player p in Players)
+                    if (p.PlayerStack == 0)
+                    {
+                        flag = true;
+                    }
+                        
+                CurrentRound++;
+            }
+            WriteLine("The End");
+
 
         }
         public void DealCards()
@@ -79,6 +123,7 @@ namespace P
         }
         public void Showdown()
         {
+            //Calculate winning hand
 
         }
         public void CheckWhoseTurnItIs()
@@ -87,7 +132,8 @@ namespace P
         }
         public void GameInfo()
         {
-            WriteLine("Current round: " + CurrentRound + "\nNumber of Players: " + NumOfPlayers);
+            WriteLine("Current round: " + CurrentRound + "\nNumber of Players: " + NumOfPlayers + "\nGame Stack: " + GameStack);
+            WriteLine("Cards on Table: ");
             foreach (Card i in CardsOnTable)
                 i.ShowCard();
         }
