@@ -12,15 +12,16 @@ namespace P
     {
         static void Main(string[] args)
         {
-            WriteLine("POKER TIME!!!");
+            WriteLine("\t\t\tPOKER TIME!!!");
 
             Game newGame = new Game(3);
             newGame.CreatePlayers();
-            newGame.GameInfo();
+
+
             newGame.InitGame();
-            WriteLine(newGame.GameStack);
-            newGame.GameRound();
-            //newGame.GameRound();
+            newGame.GameTurn();
+            //newGame.GameInfo();
+            //newGame.GameTurn();
 
 
 

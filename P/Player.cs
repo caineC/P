@@ -12,11 +12,18 @@ namespace P
         public uint PlayerID { get; set; }
         public uint PlayerStack { get; set; }
         public uint CurrentRaise { get; set; }
+        public uint ToCall { get; set; }
+        public uint Investment { get; set; }
         public List<Card> Hand = new List<Card>();
+        public double Score { get; set; }
+        public double ScoreAfterFlop { get; set; }
+        public double ScoreAfterTurn { get; set; }
+        public double ScoreAfterRiver { get; set; }
         public Player(int id, uint stack = 1000)
         {
             PlayerID = (uint)id;
             PlayerStack = stack;
+            Investment = 0;
         }
         public List<Card> GetCards(List<Card> hand)
         {
@@ -33,7 +40,9 @@ namespace P
                     Fold();
                     break;
                 case 3:
-                    Call();
+                    Write("x");
+                    ToCall = ToCall - Investment;
+                    Call(ToCall);
                     break;
                 case 4:
                     WriteLine("How much?");
@@ -50,14 +59,17 @@ namespace P
         {
             Hand.Clear();
         }
-        public void Call()
+        public uint Call(uint value)
         {
-
+            PlayerStack -= value;
+            Investment += value;
+            return value;
         }
         public uint Raise(uint value)
         {
             PlayerStack -= value;
             CurrentRaise = value;
+            Investment += value;
             return value;
         }
         public void ShowHand()
@@ -67,8 +79,32 @@ namespace P
         }
         public void ShowInfo()
         {
-            WriteLine("Player_id: " + PlayerID + "\nStack: " + PlayerStack);
+            WriteLine("\nPlayer_id: " + PlayerID + "\nStack: " + PlayerStack);
             ShowHand();
+            WriteLine("HandScore: " + Score + "\n");
+        }
+        public void HandEval()
+        {
+            int pair = 2;
+
+            if (Hand[0].Val == Hand[1].Val)
+                Score = (Hand[0].Val * 2) * pair;
+            else if ((Hand[0].Val == Hand[1].Val - 1) || Hand[0].Val - 1 == Hand[1].Val) // Check if cards are consecutive, possible straight
+            {
+                Score = (Hand[0].Val + Hand[1].Val) * 1.25;
+                if (Hand[0].Suit == Hand[1].Suit)
+                    Score *= 1.5; // Chance for flush and straight
+            }
+            else if (Hand[0].Suit == Hand[1].Suit)
+            {
+                Score = 1.5 * (Hand[0].Val + Hand[1].Val); // Chance for flush
+            }
+            else
+            {
+                Score = Hand[0].Val + Hand[1].Val;
+            }
+
         }
     }
+
 }
